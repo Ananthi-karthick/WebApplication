@@ -1,5 +1,4 @@
 <template>
-<body>
      <div class="login">
     <h1>Login Page</h1>
      <label for="username">Username:</label>
@@ -16,8 +15,8 @@
       <br>
     <p class="errMsg">{{errorMsg}}</p>
     <button :disabled="hasEmptyFields" class="btn btn-primary" v-on:click="login">Login</button>
-  </div>
-      </body> 
+    <router-link to='/signUp'>New User</router-link>
+  </div> 
         </template>
 
         <script>
@@ -28,6 +27,7 @@
                     username:'',
                     password:'',
                     role:'',
+                    errorMsg: '',
                 }
             },
             computed:{
@@ -42,7 +42,7 @@
         password: this.password,
         role: this.role,
       };
-      this.$store.dispatch('login',credentials);
+      this.$store.dispatch('login',{credentials, router: this.$router });
                }
 
 }
@@ -50,20 +50,58 @@
         }
         </script>
       
-       <style scoped>
-       .login button {
-           background-color: blue; /* Green background color */
-  color: white; /* White text color */
-  padding: 12px 20px; /* Padding around the text */
-  border: none; /* Remove the button border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Change cursor to a hand on hover */
-  box-shadow: 0px 3px 0px  #444944; /* Add a box shadow effect */
+<style scoped>
+      * {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  line-height: 1.5;
+  font-family: "Josefin Sans", Arial;
+  color:#333;
+  
+}
+.login{
+  min-height: 400px;
+   max-width: 500px;
+  margin: auto;
+  border-radius: 15px;
+  background-color: #a4dee2;
+  padding:10px;
+}
+.login label {
+  display: inline-block;
+  width: 150px;
+  text-align: right;
+  margin-right: 10px; 
+  font-weight:bold;
+  
+}
+input[type=text],[type='email'],[type='tel'],[type='password']{
+  width: 60%;
+  box-sizing: border-box;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #333;
+  border-radius: 4px;
+}
+button {
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: none;
+  background-color:#fff;
+  color:#333;
+  font-size: 16px;
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed; 
+}
+button:enabled {
+  background-color: blue;
+  color: white;
 }
 
-.login button:hover {
-  background-color: #22d1ae; /* Darker green background color on hover */
-  box-shadow: 0px 5px 0px #444944; /* Increase the shadow effect on hover */
-  font-weight:bold;
+button:enabled:hover {
+  background-color: darkblue;
 }
-       </style>
+</style>
