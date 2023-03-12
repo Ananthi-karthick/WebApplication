@@ -1,0 +1,56 @@
+package controller;
+
+import com.google.gson.Gson;
+
+import dao.UserDao;
+import model.User;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+public class UsersServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+
+        PrintWriter writer = response.getWriter();
+        BufferedReader reader = request.getReader();
+        Gson gson = new Gson();
+        User user = gson.fromJson(reader, User.class);
+        System.out.println("User Name: " + user.getUserName());
+        System.out.println("Password: " + user.getPassword());
+
+        Object[] userDetails = UserDao.doValidate(user);
+
+        JSONObject jsonResponse = new JSONObject();
+
+        if (userDetails[0] != null) {
+            jsonResponse.put("message", "Success");
+            jsonResponse.put("user_id", userDetails[1]);
+        } else {
+            jsonResponse.put("message", "Invalid username or password");
+        }
+
+        HttpSession session = request.getSession();
+        session.setAttribute("userName", userDetails[0]);
+        session.setAttribute("userId", userDetails[1]);
+        session.setAttribute("gender", userDetails[2]);
+
+        writer.println(jsonResponse);
+        System.out.println("Response: " + jsonResponse);
+        
+        writer.close();
+        reader.close();
+    }
+}
